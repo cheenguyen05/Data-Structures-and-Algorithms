@@ -17,4 +17,5 @@ int searchSmallestMissing(int* A, int left, int right){
     } else {
         return searchSmallestMissing(A, left, mid - 1);
     }
+    return NO_VALUE_MISSING;
 }
