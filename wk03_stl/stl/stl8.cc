@@ -15,6 +15,15 @@ using namespace std;
  */
 int removeLessThan(std::vector<int>& v, int limit)
 {
-    return EXIT_FAILURE;
+    // Use std::remove_if to move elements less than 'limit' to the end
+    auto new_end = std::remove_if(v.begin(), v.end(), [limit](int value) {
+        return value < limit;
+    });
+
+    // Erase the elements from the new end to the actual end
+    v.erase(new_end, v.end());
+
+    // If the code reaches this point, everything went OK
+    return EXIT_SUCCESS;
 }
 
