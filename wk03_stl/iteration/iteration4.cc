@@ -15,4 +15,10 @@ using namespace std;
 void printReverse(const list<int>& lst)
 {
     // ADD YOUR CODE HERE
+    // Tạo một reverse iterator cho danh sách
+    for (auto it = lst.rbegin(); it != lst.rend(); ++it) {
+        cout << *it << " "; // In giá trị của phần tử hiện tại và một khoảng trắng
+    }
+    
+    cout << endl; // Xuống dòng sau khi in xong
 }

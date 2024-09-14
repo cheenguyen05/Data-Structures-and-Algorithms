@@ -15,4 +15,14 @@ using namespace std;
 void printEverySecond(const list<int>& lst)
 {
     // ADD YOUR CODE HERE
+    auto it = lst.begin();
+    int index = 0;
+
+    for (; it != lst.end(); ++it) {
+        if (index%2==0){
+            cout<<*it<<" ";
+        }
+        ++index;
+    }
+    cout<<endl;
 }
