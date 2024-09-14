@@ -16,5 +16,9 @@ using namespace std;
  */
 std::vector<int>::iterator findGivenValue(std::vector<int>& v, int given)
 {
+    auto it = std::find(v.begin(), v.end(), given);
+
+    // Trả về iterator, nếu không tìm thấy thì std::find sẽ trả về v.end()
+    return it;
 }
 
