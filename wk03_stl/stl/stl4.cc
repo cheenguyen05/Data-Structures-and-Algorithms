@@ -16,5 +16,15 @@ using namespace std;
  */
 std::vector<int>::reverse_iterator findLastEven(std::vector<int>& v)
 {
+    // Sử dụng std::find_if với reverse iterator để tìm số chẵn
+    auto it = std::find_if(v.rbegin(), v.rend(), [](int n) { return n % 2 == 0; });
+
+    // Nếu tìm thấy số chẵn, trả về iterator trỏ đến nó
+    if (it != v.rend()) {
+        return it;
+    }
+    
+    // Nếu không tìm thấy số chẵn, trả về v.rend()
+    return v.rend();
 }
 
