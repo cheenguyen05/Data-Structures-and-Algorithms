@@ -15,6 +15,13 @@ using namespace std;
  */
 int sortDesc(std::vector<int>& v)
 {
-    return EXIT_FAILURE;
+    try {
+        // Use std::sort to sort the vector in ascending order
+        std::sort(v.begin(), v.end(), std::greater<int>());
+        return EXIT_SUCCESS;
+    } catch (...) {
+        // Catch any exceptions and return EXIT_FAILURE if an error occurs
+        return EXIT_FAILURE;
+    }
 }
 
