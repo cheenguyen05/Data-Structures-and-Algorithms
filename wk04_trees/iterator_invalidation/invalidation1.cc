@@ -11,10 +11,10 @@ using namespace std;
  * @param n the size of the vector to be created
  */
 std::vector<int> ascendingVector(int n) {
-    std::vector<int> v;
-    auto beg1 = v.begin();
-    for (int i = 0; i < n; ++i) { v.insert(beg1+1, i); }
-
+    std::vector<int> v(n); // Resize the vector to hold n elements
+    for (int i = 0; i < n; ++i) {
+        v[i] = i; // Fill the vector with ascending numbers
+    }
     return v;
 }
 
