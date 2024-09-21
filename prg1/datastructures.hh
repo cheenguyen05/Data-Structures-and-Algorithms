@@ -6,6 +6,9 @@
 #include "customtypes.hh"
 #include <utility>
 #include <vector>
+#include <unordered_map>  // Include for unordered_map
+#include <iostream>       // Include for std::cout
+#include <stdexcept>      // Include for std::runtime_error
 
 // Add your own STL includes below this comment
 
@@ -34,15 +37,15 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_bite(BiteID /*id*/, const Name & /*name*/, Coord /*xy*/);
+  bool add_bite(BiteID id, const Name &name, Coord xy);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  Name get_bite_name(BiteID /*id*/);
+  Name get_bite_name(BiteID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  Coord get_bite_coord(BiteID /*id*/);
+  Coord get_bite_coord(BiteID id);
 
   // We recommend you implement the operations below only after implementing the
   // ones above

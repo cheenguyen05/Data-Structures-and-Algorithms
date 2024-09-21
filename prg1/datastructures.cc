@@ -19,60 +19,45 @@ Datastructures::~Datastructures()
   // Write any cleanup you need here
 }
 
-unsigned int Datastructures::get_bite_count()
-{
-  // Replace the line below with your implementation
-  return bites.size();
+unsigned int Datastructures::get_bite_count() {
+    return bites.size();
 }
 
-void Datastructures::clear_all()
-{
-  // Replace the line below with your implementation
-  bites.clear();
-  std::cout<<"Clear all bites"<< std::endl;
+void Datastructures::clear_all() {
+    bites.clear();
+    std::cout << "Cleared all bites" << std::endl;
 }
 
-std::vector<BiteID> Datastructures::all_bites()
-{
-  // Replace the line below with your implementation
-  std::vector<BiteID> ids;
-  for (const auto& pair : bites){
-    ids.push_back(pair.first);
-  }
-  if (ids.empty()){
-    std::cout<<"No bites!"<< std::endl;
-  }
-  return ids;
+std::vector<BiteID> Datastructures::all_bites() {
+    std::vector<BiteID> ids;
+    for (const auto& pair : bites) {
+        ids.push_back(pair.first);
+    }
+    return ids;
 }
 
-bool Datastructures::add_bite(BiteID id, const Name & name, Coord xy)
-{
-  // Replace the line below with your implementation
-  if (bites.find(id) != bites.end()) {
-        return false; // Bite with the same ID already exists
+bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy) {
+    if (bites.find(id) != bites.end()) {
+        return false; // ID already exists
     }
     bites[id] = std::make_pair(name, xy);
     return true;
 }
 
-Name Datastructures::get_bite_name(BiteID id)
-{
-  // Replace the line below with your implementation
-  auto it = bites.find(id);
-  if (it != bites.end()){
-      return it->second.first;
-  }
-  throw std::runtime_error("Bite ID not found");
+Name Datastructures::get_bite_name(BiteID id) {
+    auto it = bites.find(id);
+    if (it != bites.end()) {
+        return it->second.first;
+    }
+    throw std::runtime_error("Bite ID not found");
 }
 
-Coord Datastructures::get_bite_coord(BiteID id)
-{
-  // Replace the line below with your implementation
-  auto it = bites.find(id);
-  if (it != bites.end()){
-    return it->second.second;
-  }
-  throw std::runtime_error("Bite ID bot found");
+Coord Datastructures::get_bite_coord(BiteID id) {
+    auto it = bites.find(id);
+    if (it != bites.end()) {
+        return it->second.second;
+    }
+    throw std::runtime_error("Bite ID not found");
 }
 
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
