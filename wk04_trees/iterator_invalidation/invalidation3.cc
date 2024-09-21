@@ -11,21 +11,12 @@ using namespace std;
  * @param vec vector to be handled
  */
 void duplicateEvenRemoveUneven(std::vector<int>& vec) {
-
-    using Iter = std::vector<int>::iterator;
-
-    Iter begin = vec.begin();
-    Iter end = vec.end();
-    for ( Iter it = begin; it < end; it++){
-        if ( *it % 2 == 0 ){
-            vec.insert(it, *it);
-            it++;
-
-        }
-        else {
-            vec.erase(it);
-            it--;
+    for (auto it = vec.begin(); it != vec.end(); ) {
+        if (*it % 2 == 0) {
+            it = vec.insert(it, *it); // duplicate the even number
+            it += 2; // move iterator forward by 2 positions
+        } else {
+            it = vec.erase(it); // remove the odd number and update the iterator
         }
     }
 }
-
