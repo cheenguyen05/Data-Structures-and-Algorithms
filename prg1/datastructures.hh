@@ -117,6 +117,7 @@ public:
 
 private:
   // Add stuff needed for your class implementation here
+  std::unordered_map<BiteID, std::pair<Name, Coord>> bites; // Maps BiteID to a pair of Name and Coord
 };
 
 #endif // DATASTRUCTURES_HH

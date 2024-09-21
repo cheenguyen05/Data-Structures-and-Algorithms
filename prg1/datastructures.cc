@@ -22,37 +22,57 @@ Datastructures::~Datastructures()
 unsigned int Datastructures::get_bite_count()
 {
   // Replace the line below with your implementation
-  throw NotImplemented("get_bite_count");
+  return bites.size();
 }
 
 void Datastructures::clear_all()
 {
   // Replace the line below with your implementation
-  throw NotImplemented("clear_all");
+  bites.clear();
+  std::cout<<"Clear all bites"<< std::endl;
 }
 
 std::vector<BiteID> Datastructures::all_bites()
 {
   // Replace the line below with your implementation
-  throw NotImplemented("all_bites");
+  std::vector<BiteID> ids;
+  for (const auto& pair : bites){
+    ids.push_back(pair.first);
+  }
+  if (ids.empty()){
+    std::cout<<"No bites!"<< std::endl;
+  }
+  return ids;
 }
 
-bool Datastructures::add_bite(BiteID /*id*/, const Name & /*name*/, Coord /*xy*/)
+bool Datastructures::add_bite(BiteID id, const Name & name, Coord xy)
 {
   // Replace the line below with your implementation
-  throw NotImplemented("add_bite");
+  if (bites.find(id) != bites.end()) {
+        return false; // Bite with the same ID already exists
+    }
+    bites[id] = std::make_pair(name, xy);
+    return true;
 }
 
-Name Datastructures::get_bite_name(BiteID /*id*/)
+Name Datastructures::get_bite_name(BiteID id)
 {
   // Replace the line below with your implementation
-  throw NotImplemented("get_bite_name");
+  auto it = bites.find(id);
+  if (it != bites.end()){
+      return it->second.first;
+  }
+  throw std::runtime_error("Bite ID not found");
 }
 
-Coord Datastructures::get_bite_coord(BiteID /*id*/)
+Coord Datastructures::get_bite_coord(BiteID id)
 {
   // Replace the line below with your implementation
-  throw NotImplemented("get_bite_coord");
+  auto it = bites.find(id);
+  if (it != bites.end()){
+    return it->second.second;
+  }
+  throw std::runtime_error("Bite ID bot found");
 }
 
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
