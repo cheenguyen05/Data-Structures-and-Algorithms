@@ -19,45 +19,54 @@ Datastructures::~Datastructures()
   // Write any cleanup you need here
 }
 
-unsigned int Datastructures::get_bite_count() {
-    return bites.size();
+unsigned int Datastructures::get_bite_count()
+{
+  // Replace the line below with your implementation
+  return bites_.size();
 }
 
-void Datastructures::clear_all() {
-    bites.clear();
-    std::cout << "Cleared all bites" << std::endl;
+void Datastructures::clear_all()
+{
+  // Replace the line below with your implementation
+  bites_.clear();
 }
 
-std::vector<BiteID> Datastructures::all_bites() {
-    std::vector<BiteID> ids;
-    for (const auto& pair : bites) {
-        ids.push_back(pair.first);
-    }
-    return ids;
+std::vector<BiteID> Datastructures::all_bites()
+{
+  // Replace the line below with your implementation
+  std::vector<BiteID> bite_ids;
+  for (const auto& [id, info] : bites_) {
+    bite_ids.push_back(id);
+  }
+  return bite_ids;
 }
 
-bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy) {
-    if (bites.find(id) != bites.end()) {
-        return false; // ID already exists
-    }
-    bites[id] = std::make_pair(name, xy);
-    return true;
+bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
+{
+  // Replace the line below with your implementation
+  if (bites_.find(id) != bites_.end()) {
+    return false;
+  }
+  bites_[id] = {name, xy};
+  return true;
 }
 
-Name Datastructures::get_bite_name(BiteID id) {
-    auto it = bites.find(id);
-    if (it != bites.end()) {
-        return it->second.first;
-    }
-    throw std::runtime_error("Bite ID not found");
+Name Datastructures::get_bite_name(BiteID id)
+{
+  // Replace the line below with your implementation
+  if (bites_.find(id) != bites_.end()){
+    return bites_.at(id).name;
+  }
+  return NO_NAME;
 }
 
-Coord Datastructures::get_bite_coord(BiteID id) {
-    auto it = bites.find(id);
-    if (it != bites.end()) {
-        return it->second.second;
-    }
-    throw std::runtime_error("Bite ID not found");
+Coord Datastructures::get_bite_coord(BiteID id)
+{
+  // Replace the line below with your implementation
+  if (bites_.find(id) != bites_.end()){
+    return bites_.at(id).coord;
+  }
+  return NO_COORD;
 }
 
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
@@ -159,3 +168,4 @@ std::vector<BiteID> Datastructures::get_bites_closest_to(Coord /*xy*/)
   // Replace the line below with your implementation
   throw NotImplemented("get_bites_closest_to");
 }
+

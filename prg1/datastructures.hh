@@ -6,11 +6,13 @@
 #include "customtypes.hh"
 #include <utility>
 #include <vector>
-#include <unordered_map>  // Include for unordered_map
-#include <iostream>       // Include for std::cout
-#include <stdexcept>      // Include for std::runtime_error
+#include <unordered_map>
 
 // Add your own STL includes below this comment
+struct BiteInfo {
+  Name name;
+  Coord coord;
+};
 
 template <typename Type>
 Type random_in_range(Type start, Type end);
@@ -120,7 +122,7 @@ public:
 
 private:
   // Add stuff needed for your class implementation here
-  std::unordered_map<BiteID, std::pair<Name, Coord>> bites; // Maps BiteID to a pair of Name and Coord
+  std::unordered_map<BiteID, BiteInfo> bites_;
 };
 
 #endif // DATASTRUCTURES_HH
