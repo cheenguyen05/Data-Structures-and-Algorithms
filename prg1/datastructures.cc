@@ -44,10 +44,20 @@ std::vector<BiteID> Datastructures::all_bites()
 bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
 {
   // Replace the line below with your implementation
+  // Check if the ID already exists
   if (bites_.find(id) != bites_.end()) {
-    return false;
+      return false; // ID already exists
   }
-  bites_[id] = {name, xy};
+
+  // Check if any bite exists with the same coordinates
+  for (const auto& [existing_id, bite] : bites_) {
+      if (bite.coord == xy) {
+          return false; // Coordinate already taken
+      }
+  }
+
+  // Add the bite if both checks pass
+  bites_[id] = {name, xy}; 
   return true;
 }
 
