@@ -54,19 +54,21 @@ bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
 Name Datastructures::get_bite_name(BiteID id)
 {
   // Replace the line below with your implementation
-  if (bites_.find(id) != bites_.end()){
-    return bites_.at(id).name;
-  }
+  auto it = bites_.find(id);
+  if (it == bites_.end()) {
   return NO_NAME;
+  }
+  return it->second.name;
 }
 
 Coord Datastructures::get_bite_coord(BiteID id)
 {
   // Replace the line below with your implementation
-  if (bites_.find(id) != bites_.end()){
-    return bites_.at(id).coord;
+  auto it = bites_.find(id);
+  if (it == bites_.end()) {
+      return NO_COORD; // Define NO_COORD appropriately
   }
-  return NO_COORD;
+  return it->second.coord;
 }
 
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
@@ -168,4 +170,5 @@ std::vector<BiteID> Datastructures::get_bites_closest_to(Coord /*xy*/)
   // Replace the line below with your implementation
   throw NotImplemented("get_bites_closest_to");
 }
+
 
