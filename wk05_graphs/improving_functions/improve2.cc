@@ -1,6 +1,7 @@
 #include <iterator>
 #include <vector>
 #include <algorithm>
+#include <limits>
 
 
 /**
@@ -11,10 +12,12 @@
  */
 int minValue(std::vector<int> vec){
     if ( vec.empty() ) { return 0; }
-    if ( std::is_sorted(vec.begin(), vec.end()) ) {
-        return vec[0];
-    } else {
-        std::sort(vec.begin(), vec.end());
-        return vec[0];
+    
+    int minVal = std::numeric_limits<int>::max();
+    for (const int& value : vec){
+        if (value < miVal){
+            minVal = value;
+        }
     }
+    return minVal;
 }
