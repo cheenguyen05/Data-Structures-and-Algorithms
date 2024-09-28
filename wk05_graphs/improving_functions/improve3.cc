@@ -14,13 +14,14 @@
  * @return std::map<int, int> sums - the sums of each cumulation stored in
  *         a map as values, vector values used as keys.
  */
-std::map<int, int> cumulativeSums(std::vector<int> v) {
-    std::map<int,int> sums;
-    for (unsigned int i=0; i<v.size(); ++i) {
-        if (sums.empty())
-        { sums[v[i]] = v[i]; }
-        else
-        { sums[v[i]] = sums.at(v[i-1]) + v[i]; }
+std::map<int, int> cumulativeSums(const std::vector<int>& v) {
+    std::map<int, int> sums;
+    int cumulativeSum = 0; // To keep track of the cumulative sum
+
+    for (const int& value : v) {
+        cumulativeSum += value; // Add current value to cumulative sum
+        sums[value] = cumulativeSum; // Store the cumulative sum for the current value
     }
-    return sums;
+
+    return sums; // Return the map with cumulative sums
 }
