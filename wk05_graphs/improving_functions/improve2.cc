@@ -15,7 +15,7 @@ int minValue(std::vector<int> vec){
     
     int minVal = std::numeric_limits<int>::max();
     for (const int& value : vec){
-        if (value < miVal){
+        if (value < minVal){
             minVal = value;
         }
     }
