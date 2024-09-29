@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 // Add your own STL includes below this comment
+#include <string>
 
 template <typename Type>
 Type random_in_range(Type start, Type end);
@@ -87,11 +88,11 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_subcontour_to_contour(ContourID /*id*/, ContourID /*parentid*/);
+  bool add_subcontour_to_contour(ContourID id, ContourID parentid);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_bite_to_contour(BiteID biteid, ContourID /*parentid*/);
+  bool add_bite_to_contour(BiteID biteid, ContourID parentid);
 
   // Estimate of performance:
   // Short rationale for estimate:

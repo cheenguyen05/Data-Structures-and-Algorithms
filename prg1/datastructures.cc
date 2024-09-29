@@ -231,7 +231,7 @@ bool Datastructures::add_subcontour_to_contour(ContourID id,
   }
 }
 
-bool Datastructures::add_bite_to_contour(BiteID /*biteid*/, ContourID /*contourid*/)
+bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
 {
   // Validate the ContourID
     if (contourid < 0 || contours.find(contourid) == contours.end()) {
