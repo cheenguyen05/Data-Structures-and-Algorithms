@@ -22,13 +22,22 @@ using RNG = std::default_random_engine;
  */
 void randomizedThreePartQuicksort(iter begin, iter end, RNG& rng)
 {
-    if (begin == end) return;
-    std::shuffle(begin, end, rng);
-    auto pivot = *(begin + (end - begin)/2);
-    iter middle1 = std::partition(begin, end,
-        [pivot](int val){ return val < pivot; });
+    // Base case: if range is empty or has one element, return
+    if (begin >= end) return;
+
+    // Randomly pick a pivot by swapping the first element with a random element in the range
+    std::uniform_int_distribution<int> dist(0, end - begin - 1);
+    int randomIndex = dist(rng); // Select random index
+    std::iter_swap(begin, begin + randomIndex); // Swap first element with randomly chosen element
+    auto pivot = *begin; // Use the first element as the pivot
+
+    // Partition the range into three parts:
+    iter middle1 = std::partition(begin + 1, end,
+        [pivot](int val) { return val < pivot; });
     iter middle2 = std::partition(middle1, end,
-        [pivot](int val){ return !(pivot < val); });
-    randomizedThreePartQuicksort(begin, middle1, rng);
+        [pivot](int val) { return !(pivot < val); });
+
+    // Recursively sort the left and right partitions
+    randomizedThreePartQuicksort(begin + 1, middle1, rng);
     randomizedThreePartQuicksort(middle2, end, rng);
 }
