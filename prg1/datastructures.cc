@@ -233,8 +233,19 @@ bool Datastructures::add_subcontour_to_contour(ContourID id,
 
 bool Datastructures::add_bite_to_contour(BiteID /*biteid*/, ContourID /*contourid*/)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("add_bite_to_contour");
+  // Validate the ContourID
+    if (contourid < 0 || contours.find(contourid) == contours.end()) {
+        return false; // ContourID is invalid or not found
+    }
+
+    // Validate the BiteID
+    if (biteid < 0 || bites_.find(biteid) == bites_.end()) {
+        return false; // BiteID is invalid or not found
+    }
+
+    // Add the BiteID to the contour's list of bites
+    contours[contourid].bites.push_back(biteid); // Assuming ContourInfo has a member 'bites' which is a vector of BiteID
+    return true; // Return true to indicate successful addition
 }
 
 std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
