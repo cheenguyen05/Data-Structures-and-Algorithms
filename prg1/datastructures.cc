@@ -205,29 +205,30 @@ ContourHeight Datastructures::get_contour_height(ContourID id)
   // Check if the contour with the given ID exists
     auto it = contours.find(id);
     if (it != contours.end()) {
-        // Return the height associated with the contour ID
-        return NO_CONTOUR_HEIGHT; // Assuming the contour structure has a 'height' member
+        return it->second.height; // Assuming the contour structure has a 'height' member
+    } else {
+    return NO_CONTOUR_HEIGHT;
     }
-    return it->second.height; // Assuming the contour structure has a 'height' member
-    
 }
 
 bool Datastructures::add_subcontour_to_contour(ContourID id,
                                                ContourID parentid)
 {
-  // Check if the subcontour with the given ID exists
-    auto subcontour_it = contours.find(id);
-    // Check if the parent contour with the given ID exists
-    auto parent_it = contours.find(parentid);
+  if (id == parentid){
+    return false;
+  }
+  auto parent_it = contours.find(parentid);
+  if (parent_it == contours.end()) {
+      return false; // Parent contour not found
+  }
 
-    if (subcontour_it != contours.end() && parent_it != contours.end()) {
-        // Add the subcontour ID to the parent's list of subcontours
-        parent_it->second.subcontours.push_back(id);
-        return true; // Return true if the addition was successful
-    } else {
-        // Handle the case where either the subcontour or the parent contour does not exist
-        return false; // Return false to indicate failure
-    }
+  auto it = contours.find(id);
+  if (it != contours.end()) {
+      parent_it->second.subcontours.push_back(id); // Add the subcontour to the parent
+      return true; // Successfully added subcontour
+  } else {
+      return false; // Subcontour ID not found
+  }
 }
 
 bool Datastructures::add_bite_to_contour(BiteID /*biteid*/, ContourID /*contourid*/)
