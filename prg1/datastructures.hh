@@ -66,7 +66,7 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_contour(ContourID id, const Name &name, ContourHeight height,
+  bool add_contour(ContourID id, const Name & name, ContourHeight height,
                    std::vector<Coord> coords);
 
   // Estimate of performance:
@@ -95,7 +95,7 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  std::vector<ContourID> get_bite_in_contours(BiteID /*id*/);
+  std::vector<ContourID> get_bite_in_contours(BiteID id);
 
   // Non-compulsory operations
 
@@ -125,6 +125,8 @@ private:
       Name name;
       ContourHeight height;
       std::vector<Coord> coords;
+      std::vector<ContourID> subcontours; // To store IDs of subcontours
+      std::vector<BiteID> bites; // Assuming contours can contain multiple bites
   };
   // Add stuff needed for your class implementation here
   std::unordered_map<BiteID, BiteInfo> bites_;

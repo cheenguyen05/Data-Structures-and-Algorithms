@@ -10,6 +10,7 @@
 #include "customtypes.hh"
 #include <algorithm>  // For std::sort
 
+
 Datastructures::Datastructures()
 {
   // Write any initialization you need here
@@ -35,11 +36,11 @@ void Datastructures::clear_all()
 std::vector<BiteID> Datastructures::all_bites()
 {
   // Replace the line below with your implementation
-  std::vector<BiteID> bite_ids;
+  std::vector<BiteID> all_bites;
   for (const auto& [id, info] : bites_) {
-    bite_ids.push_back(id);
+    all_bites.push_back(id);
   }
-  return bite_ids;
+  return all_bites;
 }
 
 bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
@@ -166,7 +167,7 @@ bool Datastructures::add_contour(ContourID id, const Name &name, ContourHeight h
     }
 
     // Add the new contour
-    contours[id] = {name, height, coords};
+    contours[id] = {name, height, coords, {}, {}}; // Initialize subcontours and bites as empty vectors
     return true;  // Successfully added
 }
 
@@ -194,7 +195,7 @@ std::vector<Coord> Datastructures::get_contour_coords(ContourID id)
 {
   auto it = contours.find(id);
   if (it == contours.end()) {
-      return {NO_COORD}; 
+      return {NO_COORD}; // Define NO_COORD appropriately
   }
   return it->second.coords;
 }
@@ -211,11 +212,22 @@ ContourHeight Datastructures::get_contour_height(ContourID id)
     
 }
 
-bool Datastructures::add_subcontour_to_contour(ContourID /*id*/,
-                                               ContourID /*parentid*/)
+bool Datastructures::add_subcontour_to_contour(ContourID id,
+                                               ContourID parentid)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("add_subcontour_to_contour");
+  // Check if the subcontour with the given ID exists
+    auto subcontour_it = contours.find(id);
+    // Check if the parent contour with the given ID exists
+    auto parent_it = contours.find(parentid);
+
+    if (subcontour_it != contours.end() && parent_it != contours.end()) {
+        // Add the subcontour ID to the parent's list of subcontours
+        parent_it->second.subcontours.push_back(id);
+        return true; // Return true if the addition was successful
+    } else {
+        // Handle the case where either the subcontour or the parent contour does not exist
+        return false; // Return false to indicate failure
+    }
 }
 
 bool Datastructures::add_bite_to_contour(BiteID /*biteid*/, ContourID /*contourid*/)
@@ -224,10 +236,22 @@ bool Datastructures::add_bite_to_contour(BiteID /*biteid*/, ContourID /*contouri
   throw NotImplemented("add_bite_to_contour");
 }
 
-std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID /*id*/)
+std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("get_bite_in_contours");
+  std::vector<ContourID> contourIDs; // To store the IDs of contours containing the bite
+
+    // Iterate through all contours
+    for (const auto& contour_pair : contours) {
+        const auto& contour = contour_pair.second;
+
+        // Check if the current contour contains the given bite ID
+        if (std::find(contour.bites.begin(), contour.bites.end(), id) != contour.bites.end()) {
+            // If it does, add the contour ID to the result vector
+            contourIDs.push_back(contour_pair.first); // Assuming contour_pair.first is the ContourID
+        }
+    }
+
+    return contourIDs; // Return the vector of ContourIDs containing the bite
 }
 
 std::vector<ContourID>
@@ -255,5 +279,3 @@ std::vector<BiteID> Datastructures::get_bites_closest_to(Coord /*xy*/)
   // Replace the line below with your implementation
   throw NotImplemented("get_bites_closest_to");
 }
-
-
