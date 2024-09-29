@@ -7,12 +7,9 @@
 #include <utility>
 #include <vector>
 #include <unordered_map>
+#include <map>
 
 // Add your own STL includes below this comment
-struct BiteInfo {
-  Name name;
-  Coord coord;
-};
 
 template <typename Type>
 Type random_in_range(Type start, Type end);
@@ -62,16 +59,16 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  BiteID find_bite_with_coord(Coord /*xy*/);
+  BiteID find_bite_with_coord(Coord xy);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool change_bite_coord(BiteID /*id*/, Coord /*newcoord*/);
+  bool change_bite_coord(BiteID id, Coord newcoord);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_contour(ContourID /*id*/, const Name & /*name*/, ContourHeight /*height*/,
-                   std::vector<Coord> /*coords*/);
+  bool add_contour(ContourID id, const Name &name, ContourHeight height,
+                   std::vector<Coord> coords);
 
   // Estimate of performance:
   // Short rationale for estimate:
@@ -79,7 +76,7 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  Name get_contour_name(ContourID /*id*/);
+  Name get_contour_name(ContourID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
@@ -121,8 +118,24 @@ public:
                                                     ContourID /*id2*/);
 
 private:
+  struct BiteInfo {
+      Name name;
+      Coord coord;
+      std::vector<ContourID> contours;
+  };
+  struct Contour{
+    Name name;
+    ContourHeight height;
+    std::vector<BiteID> bites;
+    std::vector<ContourID> references;
+    ContourID parent;
+  }; 
   // Add stuff needed for your class implementation here
-  std::unordered_map<BiteID, BiteInfo> bites_;
+  std::unordered_map<BiteID, std::shared_ptr<BiteInfo>> bites;
+  std::unordered_map<BiteID, std::shared_ptr<Contour>> contours;
+  std::map<Name, std::vector<BiteID>> bites_alphabetically;
+  std::map<Distance, std::vector<BiteID>> bites_distance_increasing;
+  std::unordered_map<Coord, std::vector<BiteID>, Coord> bites_by_coord;
 };
 
 #endif // DATASTRUCTURES_HH
