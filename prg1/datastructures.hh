@@ -7,7 +7,6 @@
 #include <utility>
 #include <vector>
 #include <unordered_map>
-#include <map>
 
 // Add your own STL includes below this comment
 
@@ -80,11 +79,11 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  std::vector<Coord> get_contour_coords(ContourID /*id*/);
+  std::vector<Coord> get_contour_coords(ContourID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  ContourHeight get_contour_height(ContourID /*id*/);
+  ContourHeight get_contour_height(ContourID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
@@ -121,21 +120,15 @@ private:
   struct BiteInfo {
       Name name;
       Coord coord;
-      std::vector<ContourID> contours;
   };
-  struct Contour{
-    Name name;
-    ContourHeight height;
-    std::vector<BiteID> bites;
-    std::vector<ContourID> references;
-    ContourID parent;
-  }; 
+  struct ContourInfo {
+      Name name;
+      ContourHeight height;
+      std::vector<Coord> coords;
+  };
   // Add stuff needed for your class implementation here
-  std::unordered_map<BiteID, std::shared_ptr<BiteInfo>> bites;
-  std::unordered_map<BiteID, std::shared_ptr<Contour>> contours;
-  std::map<Name, std::vector<BiteID>> bites_alphabetically;
-  std::map<Distance, std::vector<BiteID>> bites_distance_increasing;
-  std::unordered_map<Coord, std::vector<BiteID>, Coord> bites_by_coord;
+  std::unordered_map<BiteID, BiteInfo> bites_;
+  std::unordered_map<ContourID, ContourInfo> contours;
 };
 
 #endif // DATASTRUCTURES_HH
