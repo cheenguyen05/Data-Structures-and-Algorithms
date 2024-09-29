@@ -9,7 +9,7 @@
 #include "datastructures.hh"
 #include "customtypes.hh"
 #include <algorithm>  // For std::sort
-
+#include <iostream>   // For error logging
 
 Datastructures::Datastructures()
 {
@@ -29,8 +29,8 @@ unsigned int Datastructures::get_bite_count()
 
 void Datastructures::clear_all()
 {
-  // Replace the line below with your implementation
   bites_.clear();
+  contours.clear();
 }
 
 std::vector<BiteID> Datastructures::all_bites()
@@ -45,7 +45,6 @@ std::vector<BiteID> Datastructures::all_bites()
 
 bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
 {
-  // Replace the line below with your implementation
   // Check if the ID already exists
   if (bites_.find(id) != bites_.end()) {
       return false; // ID already exists
@@ -162,7 +161,7 @@ bool Datastructures::add_contour(ContourID id, const Name &name, ContourHeight h
                                  std::vector<Coord> coords)
 {
   // Check if the ContourID already exists
-    if (contours.find(id) != contours.end()) {
+    if (id<0 || contours.find(id) != contours.end()) {
         return false;  // ContourID already exists
     }
 
@@ -183,7 +182,9 @@ std::vector<ContourID> Datastructures::all_contours()
 
 Name Datastructures::get_contour_name(ContourID id)
 {
-  // Replace the line below with your implementation
+  if (id<0){
+    return NO_NAME;
+  }
   auto it = contours.find(id);
   if (it == contours.end()) {
   return NO_NAME;
@@ -193,6 +194,9 @@ Name Datastructures::get_contour_name(ContourID id)
 
 std::vector<Coord> Datastructures::get_contour_coords(ContourID id)
 {
+  if (id<0){
+    return {NO_COORD};
+  }
   auto it = contours.find(id);
   if (it == contours.end()) {
       return {NO_COORD}; // Define NO_COORD appropriately
@@ -202,19 +206,21 @@ std::vector<Coord> Datastructures::get_contour_coords(ContourID id)
 
 ContourHeight Datastructures::get_contour_height(ContourID id)
 {
+  if (id<0){
+    return NO_CONTOUR_HEIGHT;
+  }
   // Check if the contour with the given ID exists
     auto it = contours.find(id);
-    if (it != contours.end()) {
-        return it->second.height; // Assuming the contour structure has a 'height' member
-    } else {
-    return NO_CONTOUR_HEIGHT;
-    }
+    if (it == contours.end()) {
+        return NO_CONTOUR_HEIGHT;
+    } 
+    return it->second.height; // Assuming the contour structure has a 'height' member
 }
 
 bool Datastructures::add_subcontour_to_contour(ContourID id,
                                                ContourID parentid)
 {
-  if (id == parentid){
+  if (id == parentid||id<0||parentid<0){
     return false;
   }
   auto parent_it = contours.find(parentid);
@@ -223,12 +229,12 @@ bool Datastructures::add_subcontour_to_contour(ContourID id,
   }
 
   auto it = contours.find(id);
-  if (it != contours.end()) {
-      parent_it->second.subcontours.push_back(id); // Add the subcontour to the parent
-      return true; // Successfully added subcontour
-  } else {
-      return false; // Subcontour ID not found
-  }
+  if (it == contours.end()) {
+      return false;
+  } 
+  parent_it->second.subcontours.push_back(id); // Add the subcontour to the parent
+  return true;
+  
 }
 
 bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
@@ -252,16 +258,16 @@ std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 {
   std::vector<ContourID> contourIDs; // To store the IDs of contours containing the bite
 
-    // Iterate through all contours
-    for (const auto& contour_pair : contours) {
-        const auto& contour = contour_pair.second;
+  // Iterate through all contours
+  for (const auto& contour_pair : contours) {
+      const auto& contour = contour_pair.second;
 
-        // Check if the current contour contains the given bite ID
-        if (std::find(contour.bites.begin(), contour.bites.end(), id) != contour.bites.end()) {
-            // If it does, add the contour ID to the result vector
-            contourIDs.push_back(contour_pair.first); // Assuming contour_pair.first is the ContourID
-        }
-    }
+      // Check if the current contour contains the given bite ID
+      if (std::find(contour.bites.begin(), contour.bites.end(), id) != contour.bites.end()) {
+          // If it does, add the contour ID to the result vector
+          contourIDs.push_back(contour_pair.first); // Assuming contour_pair.first is the ContourID
+      }
+  }
 
     return contourIDs; // Return the vector of ContourIDs containing the bite
 }
