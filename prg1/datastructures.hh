@@ -92,7 +92,7 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool add_bite_to_contour(BiteID biteid, ContourID parentid);
+  bool add_bite_to_contour(BiteID biteid, ContourID contourid);
 
   // Estimate of performance:
   // Short rationale for estimate:
