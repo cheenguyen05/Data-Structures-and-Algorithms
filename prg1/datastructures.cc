@@ -217,25 +217,45 @@ ContourHeight Datastructures::get_contour_height(ContourID id)
     return it->second.height; // Assuming the contour structure has a 'height' member
 }
 
-bool Datastructures::add_subcontour_to_contour(ContourID id,
-                                               ContourID parentid)
+bool Datastructures::add_subcontour_to_contour(ContourID id, ContourID parentid)
 {
-  if (id == parentid||id<0||parentid<0){
-    return false;
-  }
-  auto parent_it = contours.find(parentid);
-  if (parent_it == contours.end()) {
-      return false; // Parent contour not found
-  }
+    // Check for invalid IDs
+    if (id < 0 || parentid < 0) {
+        return false; // Invalid contour IDs
+    }
 
-  auto it = contours.find(id);
-  if (it == contours.end()) {
-      return false;
-  } 
-  parent_it->second.subcontours.push_back(id); // Add the subcontour to the parent
-  return true;
-  
+    // Check if the contour to be added as subcontour exists
+    auto subcontour_it = contours.find(id);
+    if (subcontour_it == contours.end()) {
+        return false; // Subcontour not found
+    }
+
+    // Check if the parent contour exists
+    auto parent_it = contours.find(parentid);
+    if (parent_it == contours.end()) {
+        return false; // Parent contour not found
+    }
+
+    // Check for circular reference by traversing the parent chain
+    ContourID current_id = parentid; // Start with the parent contour
+    while (current_id >= 0) {
+        // If the current ancestor is the subcontour, reject the addition
+        if (current_id == id) {
+            return false; // Cannot add a contour as its own subcontour or any of its ancestors
+        }
+        
+        // Move up the hierarchy (you need to have a way to get the parent ID)
+        auto ancestor_it = contours.find(current_id);
+        if (ancestor_it == contours.end()) break; // If the parent is not found, break
+        current_id = ancestor_it->second.parentID; // Move to the parent contour
+    }
+
+    // If all checks pass, add the subcontour to the parent contour
+    parent_it->second.subcontours.push_back(id); // Assuming subcontours is a vector in ContourInfo
+    subcontour_it->second.parentID = parentid; // Update parent reference in the subcontour structure
+    return true; // Successfully added
 }
+
 
 bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
 {
@@ -256,20 +276,20 @@ bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
 
 std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 {
-  std::vector<ContourID> contourIDs; // To store the IDs of contours containing the bite
+  {
+  std::vector<ContourID> result; // To store the IDs of contours containing the bite
+    // Iterate through all contours
+    for (const auto& pair : contours) {
+        const ContourID contour_id = pair.first; // Get the ContourID
+        const ContourInfo& contour_info = pair.second; // Get the ContourInfo
 
-  // Iterate through all contours
-  for (const auto& contour_pair : contours) {
-      const auto& contour = contour_pair.second;
-
-      // Check if the current contour contains the given bite ID
-      if (std::find(contour.bites.begin(), contour.bites.end(), id) != contour.bites.end()) {
-          // If it does, add the contour ID to the result vector
-          contourIDs.push_back(contour_pair.first); // Assuming contour_pair.first is the ContourID
-      }
+        // Check if the contour contains the bite
+        if (std::find(contour_info.bites.begin(), contour_info.bites.end(), id) != contour_info.bites.end()) {
+            result.push_back(contour_id); // Add the ContourID to the result if the bite is found
+        }
+    }
+    return result; // Return the vector of ContourIDs containing the bite
   }
-
-    return contourIDs; // Return the vector of ContourIDs containing the bite
 }
 
 std::vector<ContourID>

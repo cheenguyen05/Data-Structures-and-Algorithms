@@ -128,6 +128,7 @@ private:
       std::vector<Coord> coords;
       std::vector<ContourID> subcontours; // To store IDs of subcontours
       std::vector<BiteID> bites; // Assuming contours can contain multiple bites
+      ContourID parentID;
   };
   // Add stuff needed for your class implementation here
   std::unordered_map<BiteID, BiteInfo> bites_;
