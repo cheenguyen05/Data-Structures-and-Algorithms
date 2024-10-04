@@ -24,12 +24,12 @@ Datastructures::~Datastructures()
 unsigned int Datastructures::get_bite_count()
 {
   // Replace the line below with your implementation
-  return bites_.size();
+  return bites.size();
 }
 
 void Datastructures::clear_all()
 {
-  bites_.clear();
+  bites.clear();
   contours.clear();
 }
 
@@ -37,7 +37,7 @@ std::vector<BiteID> Datastructures::all_bites()
 {
   // Replace the line below with your implementation
   std::vector<BiteID> all_bites;
-  for (const auto& [id, info] : bites_) {
+  for (const auto& [id, info] : bites) {
     all_bites.push_back(id);
   }
   return all_bites;
@@ -46,27 +46,27 @@ std::vector<BiteID> Datastructures::all_bites()
 bool Datastructures::add_bite(BiteID id, const Name &name, Coord xy)
 {
   // Check if the ID already exists
-  if (bites_.find(id) != bites_.end()) {
+  if (bites.find(id) != bites.end()) {
       return false; // ID already exists
   }
 
   // Check if any bite exists with the same coordinates
-  for (const auto& [existing_id, bite] : bites_) {
+  for (const auto& [existing_id, bite] : bites) {
       if (bite.coord == xy) {
           return false; // Coordinate already taken
       }
   }
 
   // Add the bite if both checks pass
-  bites_[id] = {name, xy}; 
+  bites[id] = {name, xy}; 
   return true;
 }
 
 Name Datastructures::get_bite_name(BiteID id)
 {
   // Replace the line below with your implementation
-  auto it = bites_.find(id);
-  if (it == bites_.end()) {
+  auto it = bites.find(id);
+  if (it == bites.end()) {
   return NO_NAME;
   }
   return it->second.name;
@@ -75,8 +75,8 @@ Name Datastructures::get_bite_name(BiteID id)
 Coord Datastructures::get_bite_coord(BiteID id)
 {
   // Replace the line below with your implementation
-  auto it = bites_.find(id);
-  if (it == bites_.end()) {
+  auto it = bites.find(id);
+  if (it == bites.end()) {
       return NO_COORD; // Define NO_COORD appropriately
   }
   return it->second.coord;
@@ -85,12 +85,12 @@ Coord Datastructures::get_bite_coord(BiteID id)
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
 {
    std::vector<BiteID> all_bites;
-    for (const auto& pair : bites_) {
+    for (const auto& pair : bites) {
         all_bites.push_back(pair.first);
     }
     
     std::sort(all_bites.begin(), all_bites.end(), [this](BiteID a, BiteID b) {
-        return bites_[a].name < bites_[b].name;
+        return bites[a].name < bites[b].name;
     });
     
     return all_bites;
@@ -102,7 +102,7 @@ std::vector<BiteID> Datastructures::get_bites_distance_increasing()
     std::vector<std::pair<int, BiteID>> distance_id_pairs;
 
     // Fill the vector with distances (squared) and corresponding IDs
-    for (const auto& [id, info] : bites_) {
+    for (const auto& [id, info] : bites) {
         int x = info.coord.x;
         int y = info.coord.y;
         int distance_squared = x * x + y * y;  // Calculate distance squared
@@ -127,7 +127,7 @@ std::vector<BiteID> Datastructures::get_bites_distance_increasing()
 BiteID Datastructures::find_bite_with_coord(Coord xy)
 {
   // Iterate over all bites to find one with matching coordinates
-    for (const auto& [id, info] : bites_) {
+    for (const auto& [id, info] : bites) {
         if (info.coord == xy) {
             return id;  // Return the BiteID if coordinates match
         }
@@ -140,13 +140,13 @@ BiteID Datastructures::find_bite_with_coord(Coord xy)
 bool Datastructures::change_bite_coord(BiteID id, Coord newcoord)
 {
   // Check if the BiteID exists
-    auto it = bites_.find(id);
-    if (it == bites_.end()) {
+    auto it = bites.find(id);
+    if (it == bites.end()) {
         return false; // The bite doesn't exist
     }
 
     // Ensure no other bite has the same new coordinates
-    for (const auto& [existing_id, bite] : bites_) {
+    for (const auto& [existing_id, bite] : bites) {
         if (existing_id != id && bite.coord == newcoord) {
             return false; // Another bite has the same coordinates
         }
@@ -265,7 +265,7 @@ bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
     }
 
     // Validate the BiteID
-    if (biteid < 0 || bites_.find(biteid) == bites_.end()) {
+    if (biteid < 0 || bites.find(biteid) == bites.end()) {
         return false; // BiteID is invalid or not found
     }
 
@@ -276,7 +276,6 @@ bool Datastructures::add_bite_to_contour(BiteID biteid, ContourID contourid)
 
 std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 {
-  {
   std::vector<ContourID> result; // To store the IDs of contours containing the bite
     // Iterate through all contours
     for (const auto& pair : contours) {
@@ -289,31 +288,98 @@ std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
         }
     }
     return result; // Return the vector of ContourIDs containing the bite
-  }
 }
 
 std::vector<ContourID>
-Datastructures::all_subcontours_of_contour(ContourID /*id*/)
+Datastructures::all_subcontours_of_contour(ContourID id)
 {
-  throw NotImplemented("all_subcontours_of_contour");
+  std::vector<ContourID> subcontours;
+
+    // Check if the contour ID is valid
+    if (contours.find(id) == contours.end()) {
+        std::cerr << "Error: Contour ID " << id << " not found." << std::endl;
+        return subcontours; // Return an empty vector
+    }
+
+    // Get the subcontours for the given contour ID
+    subcontours = contours[id].subcontours; // Assuming subcontours is a vector in ContourInfo
+
+    return subcontours; // Return the vector of subcontour IDs
 }
 
 ContourID
-Datastructures::get_closest_common_ancestor_of_contours(ContourID /*id1*/,
-                                                        ContourID /*id2*/)
+Datastructures::get_closest_common_ancestor_of_contours(ContourID id1,
+                                                        ContourID id2)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("get_closest_common_ancestor_of_contours");
+  // Check if both contour IDs are valid
+    if (contours.find(id1) == contours.end()) {
+        std::cerr << "Error: Contour ID " << id1 << " not found." << std::endl;
+        return NO_CONTOUR; // Define NO_CONTOUR appropriately
+    }
+
+    if (contours.find(id2) == contours.end()) {
+        std::cerr << "Error: Contour ID " << id2 << " not found." << std::endl;
+        return NO_CONTOUR; // Define NO_CONTOUR appropriately
+    }
+
+    // Use a set to keep track of the ancestors of id1
+    std::set<ContourID> ancestors;
+
+    // Find all ancestors of contour id1
+    ContourID current = id1;
+    while (current >= 0) {
+        ancestors.insert(current);
+        current = contours[current].parentID; // Move to the parent contour
+    }
+
+    // Now, traverse the ancestors of id2 to find the closest common ancestor
+    current = id2;
+    while (current >= 0) {
+        if (ancestors.count(current) > 0) {
+            return current; // Return the first common ancestor found
+        }
+        current = contours[current].parentID; // Move to the parent contour
+    }
+
+    std::cerr << "No common ancestor found for contours " << id1 << " and " << id2 << "." << std::endl;
+    return NO_CONTOUR; // Define NO_CONTOUR appropriately
 }
 
-bool Datastructures::remove_bite(BiteID /*id*/)
+bool Datastructures::remove_bite(BiteID id)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("remove_bite");
+  auto it = bites.find(id);
+  if (it == bites.end()) {
+    std::cerr << "Error: Bite ID " << id << " not found." << std::endl;
+    return false; // Bite not found
+  }
+
+  // Remove bite from all contours
+  for (auto& [contour_id, contour_info] : contours) {
+    contour_info.bites.erase(std::remove(contour_info.bites.begin(), contour_info.bites.end(), id), contour_info.bites.end());
+  }
+
+  bites.erase(it); // Remove the bite
+  return true; // Successfully removed
 }
 
-std::vector<BiteID> Datastructures::get_bites_closest_to(Coord /*xy*/)
+std::vector<BiteID> Datastructures::get_bites_closest_to(Coord xy)
 {
-  // Replace the line below with your implementation
-  throw NotImplemented("get_bites_closest_to");
+  std::vector<std::pair<double, BiteID>> distance_id_pairs;
+
+  for (const auto& [id, info] : bites) {
+    double distance = std::sqrt(std::pow(info.coord.x - xy.x, 2) + std::pow(info.coord.y - xy.y, 2));
+    distance_id_pairs.emplace_back(distance, id);
+  }
+
+  std::sort(distance_id_pairs.begin(), distance_id_pairs.end(),
+            [](const std::pair<double, BiteID>& a, const std::pair<double, BiteID>& b) {
+              return a.first < b.first; // Sort by distance
+            });
+
+  std::vector<BiteID> closest_bites;
+  for (const auto& pair : distance_id_pairs) {
+    closest_bites.push_back(pair.second);
+  }
+
+  return closest_bites;
 }

@@ -10,6 +10,7 @@
 
 // Add your own STL includes below this comment
 #include <string>
+#include <set>
 
 template <typename Type>
 Type random_in_range(Type start, Type end);
