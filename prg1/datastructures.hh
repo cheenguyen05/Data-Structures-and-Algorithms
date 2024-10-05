@@ -122,7 +122,9 @@ private:
   struct BiteInfo {
       Name name;
       Coord coord;
+      ContourID owner = NO_CONTOUR;
   };
+
   struct ContourInfo {
       Name name;
       ContourHeight height;
@@ -131,10 +133,11 @@ private:
       std::set<BiteID> bites; // Assuming contours can contain multiple bites
       ContourID parentID = NO_CONTOUR;
   };
-  // Add stuff needed for your class implementation here
+
   std::unordered_map<BiteID, BiteInfo> bites_;
+
   std::unordered_map<ContourID, ContourInfo> contours;
-  // Map for fast coordinate-to-bite lookup
+
   std::unordered_map<Coord, BiteID> coord_bite_map_;
 };
 
