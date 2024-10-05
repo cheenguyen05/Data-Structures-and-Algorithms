@@ -170,6 +170,7 @@ bool Datastructures::add_contour(ContourID id, const Name &name, ContourHeight h
 
     // Add the new contour
     contours[id] = {name, height, coords, {}, {}}; // Initialize subcontours and bites as empty vectors
+
     return true;  // Successfully added
 }
 
@@ -244,6 +245,22 @@ bool Datastructures::add_subcontour_to_contour(ContourID id, ContourID parentid)
         return false; // Cannot add a contour as its own subcontour
     }
 
+    auto& parent = parent_it->second;
+    auto& subcontour = subcontour_it->second;
+
+    if(subcontour.parentID != NO_CONTOUR){
+        return false;
+    }
+
+    if(parent.subcontours.find(id) != parent.subcontours.end()){
+        return false;
+    }
+
+    if(abs(subcontour.height - parent.height) != 1
+            || abs(subcontour.height) < abs(parent.height)){
+        return false;
+    }
+
     // Prevent circular references
     ContourID current_id = parentid;
     while (current_id >= 0) {
@@ -264,27 +281,21 @@ bool Datastructures::add_subcontour_to_contour(ContourID id, ContourID parentid)
 bool Datastructures::add_bite_to_contour(BiteID bite_id, ContourID contour_id) {
     // Check if the contour exists
     if (contours.find(contour_id) == contours.end()) {
-
         return false; // Contour doesn't exist
     }
 
     // Check if the bite exists
     if (bites_.find(bite_id) == bites_.end()) {
-
         return false; // Bite doesn't exist
     }
 
     const auto& contour_coords = contours[contour_id].coords;
     auto iter = std::find(contour_coords.begin(),contour_coords.end(),bites_[bite_id].coord);
-    if(iter != contour_coords.end()) return false;
+    if(iter == contour_coords.end()) return false;
 
-    if(contours[contour_id].bites.find(bite_id) != contours[contour_id].bites.end()) return false;
-
-    // Add bite to contour's set of bites
-//    if (contours[contour_id].bites.insert(bite_id).second) {
-
-//        return true; // Successfully added
-//    }
+    if(contours[contour_id].bites.find(bite_id) != contours[contour_id].bites.end()){
+        return false;
+    }
 
     contours[contour_id].bites.insert(bite_id);
     bites_[bite_id].owner = contour_id;
@@ -295,16 +306,7 @@ std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 {
     if(bites_.find(id) == bites_.end()) return {NO_CONTOUR};
     std::vector<ContourID> result; // To store the IDs of contours containing the bite
-    // Iterate through all contours
-//   for (const auto& pair : contours) {
-//        const ContourID contour_id = pair.first; // Get the ContourID
-//        const ContourInfo& contour_info = pair.second; // Get the ContourInfo
 
-        // Check if the contour contains the bite
-
-//        if (contour_info.bites.count(id) > 0) {
-//            result.push_back(contour_id); // Add the ContourID to the result if the bite is found
-//        }
     ContourID owner = bites_[id].owner;
     if(owner == NO_CONTOUR) return {};
     while (owner != NO_CONTOUR) {
