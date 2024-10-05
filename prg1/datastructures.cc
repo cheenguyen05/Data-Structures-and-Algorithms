@@ -85,17 +85,22 @@ Coord Datastructures::get_bite_coord(BiteID id)
 
 std::vector<BiteID> Datastructures::get_bites_alphabetically()
 {
-   std::vector<BiteID> all_bites;
+    std::vector<BiteID> all_bites;
     for (const auto& pair : bites_) {
         all_bites.push_back(pair.first);
     }
 
+    // Sort by name, then by BiteID to ensure a stable sort
     std::sort(all_bites.begin(), all_bites.end(), [this](BiteID a, BiteID b) {
+        if (bites_[a].name == bites_[b].name) {
+            return a < b; // or however BiteID should be compared
+        }
         return bites_[a].name < bites_[b].name;
     });
 
     return all_bites;
 }
+
 
 std::vector<BiteID> Datastructures::get_bites_distance_increasing()
 {
