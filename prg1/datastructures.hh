@@ -103,20 +103,20 @@ public:
 
   // Estimate of performance:
   // Short rationale for estimate:
-  std::vector<ContourID> all_subcontours_of_contour(ContourID /*id*/);
+  std::vector<ContourID> all_subcontours_of_contour(ContourID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  std::vector<BiteID> get_bites_closest_to(Coord /*xy*/);
+  std::vector<BiteID> get_bites_closest_to(Coord xy);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  bool remove_bite(BiteID /*id*/);
+  bool remove_bite(BiteID id);
 
   // Estimate of performance:
   // Short rationale for estimate:
-  ContourID get_closest_common_ancestor_of_contours(ContourID /*id1*/,
-                                                    ContourID /*id2*/);
+  ContourID get_closest_common_ancestor_of_contours(ContourID id1,
+                                                    ContourID id2);
 
 private:
   struct BiteInfo {
@@ -127,13 +127,15 @@ private:
       Name name;
       ContourHeight height;
       std::vector<Coord> coords;
-      std::vector<ContourID> subcontours; // To store IDs of subcontours
-      std::vector<BiteID> bites; // Assuming contours can contain multiple bites
-      ContourID parentID;
+      std::set<ContourID> subcontours; // To store IDs of subcontours
+      std::set<BiteID> bites; // Assuming contours can contain multiple bites
+      ContourID parentID = NO_CONTOUR;
   };
   // Add stuff needed for your class implementation here
   std::unordered_map<BiteID, BiteInfo> bites_;
   std::unordered_map<ContourID, ContourInfo> contours;
+  // Map for fast coordinate-to-bite lookup
+  std::unordered_map<Coord, BiteID> coord_bite_map_;
 };
 
 #endif // DATASTRUCTURES_HH
