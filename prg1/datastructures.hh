@@ -63,7 +63,7 @@ public:
   // Short rationale for estimate: Changing a coordinate involves updating an entry in an unordered map, which can take logarithmic time in the worst case due to hash collisions.
   bool change_bite_coord(BiteID id, Coord newcoord);
 
-  // Estimate of performance: O(m)
+  // Estimate of performance: O(n)
   // Short rationale for estimate: Adding a contour involves copying the vector of coordinates, so the time complexity depends on the number of coordinates.
   bool add_contour(ContourID id, const Name & name, ContourHeight height, std::vector<Coord> coords);
 
@@ -75,7 +75,7 @@ public:
   // Short rationale for estimate: Accessing an element in an unordered map by key is a constant time operation.
   Name get_contour_name(ContourID id);
 
-  // Estimate of performance: O(m)
+  // Estimate of performance: O(n)
   // Short rationale for estimate: Returning the vector of coordinates involves copying it, which takes time proportional to the number of coordinates.
   std::vector<Coord> get_contour_coords(ContourID id);
 
