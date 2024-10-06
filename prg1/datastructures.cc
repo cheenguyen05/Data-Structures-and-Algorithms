@@ -104,7 +104,7 @@ std::vector<BiteID> Datastructures::get_bites_alphabetically()
 
 std::vector<BiteID> Datastructures::get_bites_distance_increasing()
 {
-    // Reserve space to avoid multiple reallocations
+    // Preallocate space to avoid reallocations
     std::vector<std::pair<int, BiteID>> distance_id_pairs;
     distance_id_pairs.reserve(bites_.size());
 
@@ -112,21 +112,20 @@ std::vector<BiteID> Datastructures::get_bites_distance_increasing()
     for (const auto& [id, info] : bites_) {
         int x = info.coord.x;
         int y = info.coord.y;
-        int distance_squared = x * x + y * y;  // Calculate distance squared
+        int distance_squared = x * x + y * y;
         distance_id_pairs.emplace_back(distance_squared, id);
     }
 
-    // Use the in-place sorting algorithm (quicker than copying)
-    std::sort(distance_id_pairs.begin(), distance_id_pairs.end(),
-              [](const std::pair<int, BiteID>& a, const std::pair<int, BiteID>& b) {
-                  return a.first < b.first;  // Compare precomputed distances
-              });
+    // Sort the vector of pairs based on distances (squared)
+    std::sort(distance_id_pairs.begin(), distance_id_pairs.end());
 
-    // Create the final sorted ID vector
+    // Preallocate the result vector
     std::vector<BiteID> sorted_bites;
-    sorted_bites.reserve(distance_id_pairs.size()); // Reserve memory
+    sorted_bites.reserve(bites_.size());
+
+    // Extract sorted BiteIDs
     for (const auto& pair : distance_id_pairs) {
-        sorted_bites.push_back(pair.second);  // Collect IDs in sorted order
+        sorted_bites.push_back(pair.second);
     }
 
     return sorted_bites;
