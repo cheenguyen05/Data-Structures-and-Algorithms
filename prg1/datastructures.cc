@@ -104,34 +104,20 @@ std::vector<BiteID> Datastructures::get_bites_alphabetically()
 
 std::vector<BiteID> Datastructures::get_bites_distance_increasing()
 {
-    // Preallocate space to avoid reallocations
-    std::vector<std::pair<int, BiteID>> distance_id_pairs;
-    distance_id_pairs.reserve(bites_.size());
-
-    // Fill the vector with distances (squared) and corresponding IDs
-    for (const auto& [id, info] : bites_) {
-        int x = info.coord.x;
-        int y = info.coord.y;
-        int distance_squared = x * x + y * y;
-        distance_id_pairs.emplace_back(distance_squared, id);
+    std::vector<std::tuple<int, int, BiteID>> bite_info;
+    for(const auto& pair: bites_){
+        int distance = abs(pair.second.coord.x) + abs(pair.second.coord.y);
+        bite_info.emplace_back(distance,pair.second.coord.y,pair.first);
     }
 
-    // Sort the vector of pairs based on distances (squared)
-    std::sort(distance_id_pairs.begin(), distance_id_pairs.end());
-
-    // Preallocate the result vector
+    std::sort(bite_info.begin(), bite_info.end());
     std::vector<BiteID> sorted_bites;
-    sorted_bites.reserve(bites_.size());
-
-    // Extract sorted BiteIDs
-    for (const auto& pair : distance_id_pairs) {
-        sorted_bites.push_back(pair.second);
+    for(const auto& [distance, y, id] : bite_info){
+        sorted_bites.push_back(id);
     }
-
+    
     return sorted_bites;
 }
-
-
 
 BiteID Datastructures::find_bite_with_coord(Coord xy)
 {
