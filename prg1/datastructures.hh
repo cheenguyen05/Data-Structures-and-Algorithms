@@ -64,7 +64,7 @@ public:
   bool change_bite_coord(BiteID id, Coord newcoord);
 
   // Estimate of performance: O(m)
-  // Short rationale for estimate: Adding a contour requires storing the list of coordinates, so the time complexity is proportional to the number of coordinates.
+  // Short rationale for estimate: Adding a contour involves copying the vector of coordinates, so the time complexity depends on the number of coordinates.
   bool add_contour(ContourID id, const Name & name, ContourHeight height, std::vector<Coord> coords);
 
   // Estimate of performance: O(n)
@@ -76,7 +76,7 @@ public:
   Name get_contour_name(ContourID id);
 
   // Estimate of performance: O(m)
-  // Short rationale for estimate: Returning the list of coordinates requires copying the vector, which takes time proportional to the number of coordinates.
+  // Short rationale for estimate: Returning the vector of coordinates involves copying it, which takes time proportional to the number of coordinates.
   std::vector<Coord> get_contour_coords(ContourID id);
 
   // Estimate of performance: O(1)
@@ -88,11 +88,11 @@ public:
   bool add_subcontour_to_contour(ContourID id, ContourID parentid);
 
   // Estimate of performance: O(log n)
-// Short rationale for estimate: Adding a bite to a contour involves inserting into a set, which takes logarithmic time.
+  // Short rationale for estimate: Adding a bite to a contour involves inserting into a set, which takes logarithmic time.
   bool add_bite_to_contour(BiteID biteid, ContourID contourid);
 
-  // Estimate of performance: O(log n)
-  // Short rationale for estimate: Finding the contours a bite belongs to may require searching through the set, which takes logarithmic time.
+  // Estimate of performance: O(n)
+  // Short rationale for estimate: Retrieving the contours for a bite involves iterating over all the contours, which takes linear time in the worst case.
   std::vector<ContourID> get_bite_in_contours(BiteID id);
 
   // Non-compulsory operations
