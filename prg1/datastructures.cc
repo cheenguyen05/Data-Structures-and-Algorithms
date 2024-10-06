@@ -104,31 +104,34 @@ std::vector<BiteID> Datastructures::get_bites_alphabetically()
 
 std::vector<BiteID> Datastructures::get_bites_distance_increasing()
 {
-    std::vector<std::pair<long long, BiteID>> distance_id_pairs; // Use long long to avoid overflow
+    // Reserve space to avoid multiple reallocations
+    std::vector<std::pair<int, BiteID>> distance_id_pairs;
+    distance_id_pairs.reserve(bites_.size());
 
+    // Fill the vector with distances (squared) and corresponding IDs
     for (const auto& [id, info] : bites_) {
-        long long x = info.coord.x; // Ensure x and y are large enough types
-        long long y = info.coord.y;
-        long long distance_squared = x * x + y * y;  // Calculate distance squared
+        int x = info.coord.x;
+        int y = info.coord.y;
+        int distance_squared = x * x + y * y;  // Calculate distance squared
         distance_id_pairs.emplace_back(distance_squared, id);
     }
 
-    // Sort based on distance
+    // Use the in-place sorting algorithm (quicker than copying)
     std::sort(distance_id_pairs.begin(), distance_id_pairs.end(),
-              [](const std::pair<long long, BiteID>& a, const std::pair<long long, BiteID>& b) {
-                  return a.first < b.first;  // Compare distances
+              [](const std::pair<int, BiteID>& a, const std::pair<int, BiteID>& b) {
+                  return a.first < b.first;  // Compare precomputed distances
               });
 
-    // Reserve space for sorted IDs
+    // Create the final sorted ID vector
     std::vector<BiteID> sorted_bites;
-    sorted_bites.reserve(distance_id_pairs.size());  // Reserve space
-
+    sorted_bites.reserve(distance_id_pairs.size()); // Reserve memory
     for (const auto& pair : distance_id_pairs) {
-        sorted_bites.push_back(pair.second);  // Get the ID from the pair
+        sorted_bites.push_back(pair.second);  // Collect IDs in sorted order
     }
 
     return sorted_bites;
 }
+
 
 
 BiteID Datastructures::find_bite_with_coord(Coord xy)
