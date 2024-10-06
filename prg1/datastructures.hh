@@ -91,8 +91,8 @@ public:
   // Short rationale for estimate: Inserting into a set of bites is constant-time on average.
   bool add_bite_to_contour(BiteID biteid, ContourID contourid);
 
-  // Estimate of performance: O(k)
-  // Short rationale for estimate: Iterates over all contours containing the bite. Assuming `k` is the number of contours, it takes O(k) time.
+  // Estimate of performance: O(1)
+  // Short rationale for estimate: Accessing the contours for a bite is constant time, as it's a direct lookup.
   std::vector<ContourID> get_bite_in_contours(BiteID id);
 
   // Non-compulsory operations
