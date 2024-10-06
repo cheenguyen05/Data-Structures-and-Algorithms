@@ -55,16 +55,16 @@ public:
   // Short rationale for estimate: Sorting the bites by distance takes O(n log n) time.
   std::vector<BiteID> get_bites_distance_increasing();
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: If `coord_bite_map_` is used, this is a constant-time lookup.
+  // Estimate of performance: O(log n)
+  // Short rationale for estimate: In the worst case, searching for a bite with a coordinate in an unordered map can be logarithmic due to hash collisions.
   BiteID find_bite_with_coord(Coord xy);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Updating the coordinate in an unordered map is a constant time operation.
+  // Estimate of performance: O(log n)
+  // Short rationale for estimate: Changing a coordinate involves updating an entry in an unordered map, which can take logarithmic time in the worst case due to hash collisions.
   bool change_bite_coord(BiteID id, Coord newcoord);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Adding an entry to an unordered map takes constant time.
+  // Estimate of performance: O(m)
+  // Short rationale for estimate: Adding a contour requires storing the list of coordinates, so the time complexity is proportional to the number of coordinates.
   bool add_contour(ContourID id, const Name & name, ContourHeight height, std::vector<Coord> coords);
 
   // Estimate of performance: O(n)
@@ -75,24 +75,24 @@ public:
   // Short rationale for estimate: Accessing an element in an unordered map by key is a constant time operation.
   Name get_contour_name(ContourID id);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Returns the vector of coordinates in constant time as it's stored in the map.
+  // Estimate of performance: O(m)
+  // Short rationale for estimate: Returning the list of coordinates requires copying the vector, which takes time proportional to the number of coordinates.
   std::vector<Coord> get_contour_coords(ContourID id);
 
   // Estimate of performance: O(1)
   // Short rationale for estimate: Accessing the height in an unordered map is a constant time operation.
   ContourHeight get_contour_height(ContourID id);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Adding a subcontour to a set is a constant-time operation.
+  // Estimate of performance: O(log n)
+  // Short rationale for estimate: Adding a subcontour involves inserting into a set, which takes logarithmic time.
   bool add_subcontour_to_contour(ContourID id, ContourID parentid);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Inserting into a set of bites is constant-time on average.
+  // Estimate of performance: O(log n)
+// Short rationale for estimate: Adding a bite to a contour involves inserting into a set, which takes logarithmic time.
   bool add_bite_to_contour(BiteID biteid, ContourID contourid);
 
-  // Estimate of performance: O(1)
-  // Short rationale for estimate: Accessing the contours for a bite is constant time, as it's a direct lookup.
+  // Estimate of performance: O(log n)
+  // Short rationale for estimate: Finding the contours a bite belongs to may require searching through the set, which takes logarithmic time.
   std::vector<ContourID> get_bite_in_contours(BiteID id);
 
   // Non-compulsory operations
