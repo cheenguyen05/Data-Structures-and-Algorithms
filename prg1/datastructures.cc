@@ -335,8 +335,6 @@ std::vector<ContourID> Datastructures::all_subcontours_of_contour(ContourID id)
     return all_subcontours;
 }
 
-
-
 ContourID
 Datastructures::get_closest_common_ancestor_of_contours(ContourID id1,
                                                         ContourID id2)
@@ -375,48 +373,59 @@ Datastructures::get_closest_common_ancestor_of_contours(ContourID id1,
     return NO_CONTOUR; // Define NO_CONTOUR appropriately
 }
 
-bool Datastructures::remove_bite(BiteID id)
+bool Datastructures::remove_bite(BiteID id) 
 {
     // Check if the bite exists
-    auto it = bites_.find(id);
-    if (it == bites_.end()) {
+    if (bites_.find(id) == bites_.end()) {
         return false; // Bite not found
     }
 
     // Remove the bite from all contours
     for (auto& [contour_id, contour_info] : contours) {
+        // Use an iterator to remove the bite efficiently from the set
         contour_info.bites.erase(id); // Efficient removal from a set
     }
 
-    // Remove the bite from the bites_ map and coord_bite_map_
-    coord_bite_map_.erase(it->second.coord);
-    bites_.erase(it); // Remove from bites_
+    // Remove the bite from coord_bite_map_ using its coordinate
+    coord_bite_map_.erase(bites_[id].coord); // Ensure this accesses the correct coordinate
 
-    return true;
+    // Remove the bite from the bites_ map
+    bites_.erase(id); // Remove from bites_
+
+    return true; // Successfully removed
 }
+
 
 std::vector<BiteID> Datastructures::get_bites_closest_to(Coord xy)
 {
-    std::vector<std::pair<int, BiteID>> distance_id_pairs;
+    std::vector<BiteID> closest_bites;
+    std::vector<BiteID> all_bites;
 
+    // Collect all BiteIDs first
     for (const auto& [id, info] : bites_) {
-        int dx = info.coord.x - xy.x;
-        int dy = info.coord.y - xy.y;
-        int distance_squared = dx * dx + dy * dy; // Squared distance calculation
-        distance_id_pairs.emplace_back(distance_squared, id);
+        all_bites.push_back(id);
     }
 
-    // Sort the bites based on the squared distances
-    std::sort(distance_id_pairs.begin(), distance_id_pairs.end(),
-              [](const std::pair<int, BiteID>& a, const std::pair<int, BiteID>& b) {
-                  return a.first < b.first;
+    // Sort BiteIDs based on squared distance to xy (avoiding sqrt for efficiency)
+    std::sort(all_bites.begin(), all_bites.end(),
+              [&](BiteID id1, BiteID id2) {
+                  const Coord& coord1 = bites_.at(id1).coord;
+                  const Coord& coord2 = bites_.at(id2).coord;
+
+                  // Compute squared distances for comparison
+                  int distance1_squared = std::pow(coord1.x - xy.x, 2) + std::pow(coord1.y - xy.y, 2);
+                  int distance2_squared = std::pow(coord2.x - xy.x, 2) + std::pow(coord2.y - xy.y, 2);
+
+                  return distance1_squared < distance2_squared;
               });
 
-    // Extract sorted BiteIDs
-    std::vector<BiteID> closest_bites;
-    for (const auto& pair : distance_id_pairs) {
-        closest_bites.push_back(pair.second);
+    // If there are more than 3 bites, return the top 3 closest
+    if (all_bites.size() > 3) {
+        closest_bites.insert(closest_bites.end(), all_bites.begin(), all_bites.begin() + 3);
+    } else {
+        closest_bites = all_bites; // If fewer than 3, return all bites
     }
 
     return closest_bites;
 }
+
