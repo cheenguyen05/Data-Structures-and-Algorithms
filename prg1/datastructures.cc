@@ -313,21 +313,28 @@ std::vector<ContourID> Datastructures::get_bite_in_contours(BiteID id)
 
 std::vector<ContourID> Datastructures::all_subcontours_of_contour(ContourID id)
 {
-    std::vector<ContourID> subcontours_vector;
+    std::vector<ContourID> all_subcontours;
 
     // Check if the contour ID is valid
     if (contours.find(id) == contours.end()) {
-        return subcontours_vector; // Return an empty vector
+        return {NO_CONTOUR}; // Return a special value indicating no contour
     }
 
-    // Get the subcontours for the given contour ID (subcontours is now a set)
-    const std::set<ContourID>& subcontours_set = contours[id].subcontours;
+    // Get the direct subcontours
+    const std::set<ContourID>& direct_subcontours = contours[id].subcontours;
 
-    // Convert set to vector
-    subcontours_vector.assign(subcontours_set.begin(), subcontours_set.end());
+    // Recursively gather subcontours of each direct subcontour
+    for (const ContourID& sub_id : direct_subcontours) {
+        std::vector<ContourID> indirect_subcontours = all_subcontours_of_contour(sub_id);
+        all_subcontours.insert(all_subcontours.end(), indirect_subcontours.begin(), indirect_subcontours.end());
+    }
 
-    return subcontours_vector; // Return the vector of subcontour IDs
+    // Add the direct subcontours at the end
+    all_subcontours.insert(all_subcontours.end(), direct_subcontours.begin(), direct_subcontours.end());
+
+    return all_subcontours;
 }
+
 
 
 ContourID
