@@ -380,17 +380,19 @@ bool Datastructures::remove_bite(BiteID id)
         return false; // Bite not found
     }
 
-    // Remove the bite from all contours
-    for (auto& [contour_id, contour_info] : contours) {
-        // Use an iterator to remove the bite efficiently from the set
-        contour_info.bites.erase(id); // Efficient removal from a set
+    // Remove the bite from relevant contours directly (using bite_to_contours_map_)
+    if (bite_to_contours_map_.find(id) != bite_to_contours_map_.end()) {
+        for (ContourID contour_id : bite_to_contours_map_[id]) {
+            contours[contour_id].bites.erase(id); // Efficient removal from set
+        }
+        bite_to_contours_map_.erase(id); // Remove mapping of the bite to contours
     }
 
-    // Remove the bite from coord_bite_map_ using its coordinate
-    coord_bite_map_.erase(bites_[id].coord); // Ensure this accesses the correct coordinate
+    // Remove the bite from coord_bite_map_
+    coord_bite_map_.erase(bites_[id].coord);
 
     // Remove the bite from the bites_ map
-    bites_.erase(id); // Remove from bites_
+    bites_.erase(id);
 
     return true; // Successfully removed
 }

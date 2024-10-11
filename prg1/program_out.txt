@@ -1,0 +1,138 @@
+> testread "integration-compulsory/test-00-compulsory-in.txt" "integration-compulsory/test-00-compulsory-out.txt"
+  Actual output                                               | Expected output
+--------------------------------------------------------------|------------------------------------------------------------
+  > clear_all                                                 | > clear_all
+  Cleared all bites                                           | Cleared all bites
+  > get_bite_count                                            | > get_bite_count
+  Number of bites: 0                                          | Number of bites: 0
+  > read "example-data/example-bites.txt" silent              | > read "example-data/example-bites.txt" silent
+  ** Commands from 'example-data/example-bites.txt'           | ** Commands from 'example-data/example-bites.txt'
+  ...(output discarded in silent mode)...                     | ...(output discarded in silent mode)...
+  ** End of commands from 'example-data/example-bites.txt'    | ** End of commands from 'example-data/example-bites.txt'
+  > all_bites                                                 | > all_bites
+  Bites:                                                      | Bites:
+  1. 🍽: pos=(1,9), id=1                                    | 1. 🍽: pos=(1,9), id=1
+  2. 🤡: pos=(1,22), id=2                                   | 2. 🤡: pos=(1,22), id=2
+  3. 🤬: pos=(1,60), id=3                                   | 3. 🤬: pos=(1,60), id=3
+  4. 🍴: pos=(1,98), id=4                                   | 4. 🍴: pos=(1,98), id=4
+  5. 🤸: pos=(2,24), id=5                                   | 5. 🤸: pos=(2,24), id=5
+  6. 🤣: pos=(2,34), id=6                                   | 6. 🤣: pos=(2,34), id=6
+  7. 🤩: pos=(2,50), id=7                                   | 7. 🤩: pos=(2,50), id=7
+  8. 🤶: pos=(2,68), id=8                                   | 8. 🤶: pos=(2,68), id=8
+  9. 🍸: pos=(2,71), id=9                                   | 9. 🍸: pos=(2,71), id=9
+  10. 🍹: pos=(2,93), id=10                                 | 10. 🍹: pos=(2,93), id=10
+  11. 🍱: pos=(3,9), id=11                                  | 11. 🍱: pos=(3,9), id=11
+  12. 🍢: pos=(3,17), id=12                                 | 12. 🍢: pos=(3,17), id=12
+  13. 🍧: pos=(3,60), id=13                                 | 13. 🍧: pos=(3,60), id=13
+  14. 🤨: pos=(3,77), id=14                                 | 14. 🤨: pos=(3,77), id=14
+  15. 🍬: pos=(3,80), id=15                                 | 15. 🍬: pos=(3,80), id=15
+  16. 🍢: pos=(98,36), id=408                               | 16. 🍢: pos=(98,36), id=408
+  17. 🍧: pos=(98,40), id=409                               | 17. 🍧: pos=(98,40), id=409
+  > get_bite_count                                            | > get_bite_count
+  Number of bites: 17                                         | Number of bites: 17
+  > get_bites_alphabetically                                  | > get_bites_alphabetically
+  Bites:                                                      | Bites:
+  1. 🍢: pos=(3,17), id=12                                  | 1. 🍢: pos=(3,17), id=12
+  2. 🍢: pos=(98,36), id=408                                | 2. 🍢: pos=(98,36), id=408
+  3. 🍧: pos=(3,60), id=13                                  | 3. 🍧: pos=(3,60), id=13
+  4. 🍧: pos=(98,40), id=409                                | 4. 🍧: pos=(98,40), id=409
+  5. 🍬: pos=(3,80), id=15                                  | 5. 🍬: pos=(3,80), id=15
+  6. 🍱: pos=(3,9), id=11                                   | 6. 🍱: pos=(3,9), id=11
+  7. 🍴: pos=(1,98), id=4                                   | 7. 🍴: pos=(1,98), id=4
+  8. 🍸: pos=(2,71), id=9                                   | 8. 🍸: pos=(2,71), id=9
+  9. 🍹: pos=(2,93), id=10                                  | 9. 🍹: pos=(2,93), id=10
+  10. 🍽: pos=(1,9), id=1                                   | 10. 🍽: pos=(1,9), id=1
+  11. 🤡: pos=(1,22), id=2                                  | 11. 🤡: pos=(1,22), id=2
+  12. 🤣: pos=(2,34), id=6                                  | 12. 🤣: pos=(2,34), id=6
+  13. 🤨: pos=(3,77), id=14                                 | 13. 🤨: pos=(3,77), id=14
+  14. 🤩: pos=(2,50), id=7                                  | 14. 🤩: pos=(2,50), id=7
+  15. 🤬: pos=(1,60), id=3                                  | 15. 🤬: pos=(1,60), id=3
+  16. 🤶: pos=(2,68), id=8                                  | 16. 🤶: pos=(2,68), id=8
+  17. 🤸: pos=(2,24), id=5                                  | 17. 🤸: pos=(2,24), id=5
+  > get_bites_distance_increasing                             | > get_bites_distance_increasing
+  Bites:                                                      | Bites:
+  1. 🍽: pos=(1,9), id=1                                    | 1. 🍽: pos=(1,9), id=1
+  2. 🍱: pos=(3,9), id=11                                   | 2. 🍱: pos=(3,9), id=11
+  3. 🍢: pos=(3,17), id=12                                  | 3. 🍢: pos=(3,17), id=12
+  4. 🤡: pos=(1,22), id=2                                   | 4. 🤡: pos=(1,22), id=2
+  5. 🤸: pos=(2,24), id=5                                   | 5. 🤸: pos=(2,24), id=5
+  6. 🤣: pos=(2,34), id=6                                   | 6. 🤣: pos=(2,34), id=6
+  7. 🤩: pos=(2,50), id=7                                   | 7. 🤩: pos=(2,50), id=7
+  8. 🤬: pos=(1,60), id=3                                   | 8. 🤬: pos=(1,60), id=3
+  9. 🍧: pos=(3,60), id=13                                  | 9. 🍧: pos=(3,60), id=13
+  10. 🤶: pos=(2,68), id=8                                  | 10. 🤶: pos=(2,68), id=8
+  11. 🍸: pos=(2,71), id=9                                  | 11. 🍸: pos=(2,71), id=9
+  12. 🤨: pos=(3,77), id=14                                 | 12. 🤨: pos=(3,77), id=14
+  13. 🍬: pos=(3,80), id=15                                 | 13. 🍬: pos=(3,80), id=15
+  14. 🍹: pos=(2,93), id=10                                 | 14. 🍹: pos=(2,93), id=10
+  15. 🍴: pos=(1,98), id=4                                  | 15. 🍴: pos=(1,98), id=4
+  16. 🍢: pos=(98,36), id=408                               | 16. 🍢: pos=(98,36), id=408
+  17. 🍧: pos=(98,40), id=409                               | 17. 🍧: pos=(98,40), id=409
+  > change_bite_coord 8 (5,11)                                | > change_bite_coord 8 (5,11)
+  Bite:                                                       | Bite:
+     🤶: pos=(5,11), id=8                                   |    🤶: pos=(5,11), id=8
+  > find_bite_with_coord (5, 11)                              | > find_bite_with_coord (5, 11)
+  🤶: pos=(5,11), id=8                                      | 🤶: pos=(5,11), id=8
+  > read "example-data/example-contours.txt" silent           | > read "example-data/example-contours.txt" silent
+  ** Commands from 'example-data/example-contours.txt'        | ** Commands from 'example-data/example-contours.txt'
+  ...(output discarded in silent mode)...                     | ...(output discarded in silent mode)...
+  ** End of commands from 'example-data/example-contours.txt' | ** End of commands from 'example-data/example-contours.txt'
+  > add_bite_to_contour 3 1                                   | > add_bite_to_contour 3 1
+  Adding a bite to contour failed!                            | Adding a bite to contour failed!
+  > get_bite_in_contours 3                                    | > get_bite_in_contours 3
+  Bite does not belong to any contour.                        | Bite does not belong to any contour.
+  Bite:                                                       | Bite:
+     🤬: pos=(1,60), id=3                                   |    🤬: pos=(1,60), id=3
+  > get_bite_in_contours 4                                    | > get_bite_in_contours 4
+  Bite does not belong to any contour.                        | Bite does not belong to any contour.
+  Bite:                                                       | Bite:
+     🍴: pos=(1,98), id=4                                   |    🍴: pos=(1,98), id=4
+  > add_bite_to_contour 3 15                                  | > add_bite_to_contour 3 15
+  Adding a bite to contour failed!                            | Adding a bite to contour failed!
+  > add_bite_to_contour 4 1                                   | > add_bite_to_contour 4 1
+  Adding a bite to contour failed!                            | Adding a bite to contour failed!
+  > add_bite_to_contour 4 2                                   | > add_bite_to_contour 4 2
+  Adding a bite to contour failed!                            | Adding a bite to contour failed!
+  > get_bite_in_contours 3                                    | > get_bite_in_contours 3
+  Bite does not belong to any contour.                        | Bite does not belong to any contour.
+  Bite:                                                       | Bite:
+     🤬: pos=(1,60), id=3                                   |    🤬: pos=(1,60), id=3
+  > get_bite_in_contours 4                                    | > get_bite_in_contours 4
+  Bite does not belong to any contour.                        | Bite does not belong to any contour.
+  Bite:                                                       | Bite:
+     🍴: pos=(1,98), id=4                                   |    🍴: pos=(1,98), id=4
+  > all_contours                                              | > all_contours
+  Contours:                                                   | Contours:
+  1. hill_1_1: id=1                                           | 1. hill_1_1: id=1
+  2. hill_1_1_2: id=2                                         | 2. hill_1_1_2: id=2
+  3. hill_1_1_3: id=3                                         | 3. hill_1_1_3: id=3
+  4. hill_1_1_4: id=4                                         | 4. hill_1_1_4: id=4
+  5. hill_1_2_2: id=5                                         | 5. hill_1_2_2: id=5
+  6. hill_1_2_3: id=6                                         | 6. hill_1_2_3: id=6
+  7. hill_1_2_4: id=7                                         | 7. hill_1_2_4: id=7
+  8. hill_1_2_4: id=8                                         | 8. hill_1_2_4: id=8
+  9. valley_2_1: id=9                                         | 9. valley_2_1: id=9
+  10. valley_2_1_2: id=10                                     | 10. valley_2_1_2: id=10
+  11. valley_2_1_3: id=11                                     | 11. valley_2_1_3: id=11
+  12. valley_2_1_4: id=12                                     | 12. valley_2_1_4: id=12
+  13. valley_2_2_2: id=13                                     | 13. valley_2_2_2: id=13
+  14. valley_2_2_3: id=14                                     | 14. valley_2_2_3: id=14
+  15. valley_2_2_4: id=15                                     | 15. valley_2_2_4: id=15
+  16. valley_2_3_2: id=16                                     | 16. valley_2_3_2: id=16
+  17. valley_2_3_3: id=17                                     | 17. valley_2_3_3: id=17
+  18. valley_2_3_4: id=18                                     | 18. valley_2_3_4: id=18
+  19. valley_2_3_4: id=19                                     | 19. valley_2_3_4: id=19
+  > clear_all                                                 | > clear_all
+  Cleared all bites                                           | Cleared all bites
+  > get_contour_coords 19                                     | > get_contour_coords 19
+  Failed (NO_COORD returned)!                                 | Failed (NO_COORD returned)!
+  > get_bite_in_contours 3                                    | > get_bite_in_contours 3
+  Bite:                                                       | Bite:
+     !NO_NAME!: pos=(--NO_COORD--), id=3                      |    !NO_NAME!: pos=(--NO_COORD--), id=3
+  Failed (NO_CONTOUR returned)!                               | Failed (NO_CONTOUR returned)!
+  > all_contours                                              | > all_contours
+  No contours!                                                | No contours!
+  >                                                           | > 
+**No differences in output.**
+Testread-tests have been run, no differences found.
+> 

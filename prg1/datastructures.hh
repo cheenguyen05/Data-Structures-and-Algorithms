@@ -139,6 +139,8 @@ private:
   std::unordered_map<ContourID, ContourInfo> contours;
 
   std::unordered_map<Coord, BiteID> coord_bite_map_;
+
+  std::unordered_map<BiteID, std::set<ContourID>> bite_to_contours_map_;
 };
 
 #endif // DATASTRUCTURES_HH
