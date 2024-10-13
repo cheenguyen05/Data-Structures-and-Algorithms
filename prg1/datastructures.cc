@@ -339,38 +339,39 @@ ContourID
 Datastructures::get_closest_common_ancestor_of_contours(ContourID id1,
                                                         ContourID id2)
 {
-  // Check if both contour IDs are valid
-    if (contours.find(id1) == contours.end()) {
-
-        return NO_CONTOUR; // Define NO_CONTOUR appropriately
+    // Check if both contours exist
+    auto it1 = contours.find(id1);
+    auto it2 = contours.find(id2);
+    if (it1 == contours.end() || it2 == contours.end()) {
+        return NO_CONTOUR;
     }
 
-    if (contours.find(id2) == contours.end()) {
+    // Lambda function to get the parent chain of a contour
+    auto get_parent_chain = [this](ContourID c) -> std::vector<ContourID> {
+        std::vector<ContourID> result;
+        auto it = contours.find(c);
 
-        return NO_CONTOUR; // Define NO_CONTOUR appropriately
-    }
-
-    // Use a set to keep track of the ancestors of id1
-    std::set<ContourID> ancestors;
-
-    // Find all ancestors of contour id1
-    ContourID current = id1;
-    while (current >= 0) {
-        ancestors.insert(current);
-        current = contours[current].parentID; // Move to the parent contour
-    }
-
-    // Now, traverse the ancestors of id2 to find the closest common ancestor
-    current = id2;
-    while (current >= 0) {
-        if (ancestors.count(current) > 0) {
-            return current; // Return the first common ancestor found
+        // Traverse up the parent chain until there is no parent
+        while (it != contours.end() && it->second.parentID != NO_CONTOUR) {
+            result.push_back(it->second.parentID);
+            it = contours.find(it->second.parentID); // Move to the parent
         }
-        current = contours[current].parentID; // Move to the parent contour
+
+        return result;
+    };
+
+    // Get the parent chains for both contours
+    auto c1_parent = get_parent_chain(id1);
+    auto c2_parent = get_parent_chain(id2);
+
+    // Find the first common ancestor in the parent chains
+    for (const auto& c1 : c1_parent) {
+        if (std::find(c2_parent.begin(), c2_parent.end(), c1) != c2_parent.end()) {
+            return c1;
+        }
     }
 
-
-    return NO_CONTOUR; // Define NO_CONTOUR appropriately
+    return NO_CONTOUR; // No common ancestor found
 }
 
 bool Datastructures::remove_bite(BiteID id) 
