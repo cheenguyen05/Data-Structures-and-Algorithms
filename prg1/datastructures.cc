@@ -10,7 +10,6 @@
 #include "customtypes.hh"
 #include <algorithm>  // For std::sort
 #include <iostream>   // For error logging
-#include <climits>
 
 Datastructures::Datastructures()
 {
@@ -336,44 +335,43 @@ std::vector<ContourID> Datastructures::all_subcontours_of_contour(ContourID id)
     return all_subcontours;
 }
 
-ContourID Datastructures::get_closest_common_ancestor_of_contours(ContourID id1, ContourID id2) {
-    // Define NO_CONTOUR appropriately
-    const ContourID NO_CONTOUR = -1;
+ContourID
+Datastructures::get_closest_common_ancestor_of_contours(ContourID id1,
+                                                        ContourID id2)
+{
+  // Check if both contour IDs are valid
+    if (contours.find(id1) == contours.end()) {
 
-    // Check if both contour IDs are valid
-    if (contours.find(id1) == contours.end() || contours.find(id2) == contours.end()) {
-        return NO_CONTOUR;
+        return NO_CONTOUR; // Define NO_CONTOUR appropriately
     }
 
-    // Use a map to keep track of the ancestors of id1 and their depths
-    std::unordered_map<ContourID, int> ancestors;
-    int depth = 0;
+    if (contours.find(id2) == contours.end()) {
 
-    // Find all ancestors of contour id1 and store their depths
+        return NO_CONTOUR; // Define NO_CONTOUR appropriately
+    }
+
+    // Use a set to keep track of the ancestors of id1
+    std::set<ContourID> ancestors;
+
+    // Find all ancestors of contour id1
     ContourID current = id1;
-    while (current != NO_CONTOUR) {
-        ancestors[current] = depth++;
+    while (current >= 0) {
+        ancestors.insert(current);
         current = contours[current].parentID; // Move to the parent contour
     }
 
     // Now, traverse the ancestors of id2 to find the closest common ancestor
     current = id2;
-    depth = 0;
-    ContourID closest_common_ancestor = NO_CONTOUR;
-    int min_depth = INT_MAX;
-
-    while (current != NO_CONTOUR) {
-        if (ancestors.count(current) > 0 && ancestors[current] < min_depth) {
-            closest_common_ancestor = current;
-            min_depth = ancestors[current];
+    while (current >= 0) {
+        if (ancestors.count(current) > 0) {
+            return current; // Return the first common ancestor found
         }
         current = contours[current].parentID; // Move to the parent contour
-        depth++;
     }
 
-    return closest_common_ancestor;
-}
 
+    return NO_CONTOUR; // Define NO_CONTOUR appropriately
+}
 
 bool Datastructures::remove_bite(BiteID id) 
 {
@@ -402,44 +400,31 @@ bool Datastructures::remove_bite(BiteID id)
 
 std::vector<BiteID> Datastructures::get_bites_closest_to(Coord xy)
 {
-    std::vector<BiteID> closest_bites;
-    std::vector<BiteID> all_bites;
+    std::vector<std::pair<int, BiteID>> distances;
 
-    // Collect all BiteIDs
-    for (const auto& [id, info] : bites_) {
-        all_bites.push_back(id);
+    for (const auto& pair : bites_) {  // Change bite_map to bites_
+        const auto& bite_coord = pair.second.coord; // Access coord from BiteInfo
+        // Compute the Manhattan distance
+        int manhattan_distance = std::abs(bite_coord.x - xy.x) + std::abs(bite_coord.y - xy.y);
+        distances.emplace_back(manhattan_distance, pair.first);
     }
 
-    // Sort based on integer distance (squared to avoid sqrt()) and tie-breaking on coordinates and BiteID
-    std::sort(all_bites.begin(), all_bites.end(),
-              [&](BiteID id1, BiteID id2) {
-                  const Coord& coord1 = bites_.at(id1).coord;
-                  const Coord& coord2 = bites_.at(id2).coord;
+    std::sort(distances.begin(), distances.end(), [&](const auto &a, const auto &b) {
+        if (a.first != b.first) return a.first < b.first;
+        const auto& coordA = bites_.at(a.second).coord; // Access coord from BiteInfo
+        const auto& coordB = bites_.at(b.second).coord; // Access coord from BiteInfo
 
-                  // Compute squared distances to avoid floating-point operations
-                  int dist1_squared = (coord1.x - xy.x) * (coord1.x - xy.x) + (coord1.y - xy.y) * (coord1.y - xy.y);
-                  int dist2_squared = (coord2.x - xy.x) * (coord2.x - xy.x) + (coord2.y - xy.y) * (coord2.y - xy.y);
+        if (coordA.y != coordB.y) return coordA.y < coordB.y;
+        return a.second < b.second;
+    });
 
-                  if (dist1_squared != dist2_squared) {
-                      // Sort by distance if distances are different
-                      return dist1_squared < dist2_squared;
-                  } else {
-                      // Tie-breaking by x-coordinate, then y-coordinate, and finally by BiteID
-                      if (coord1.x != coord2.x) {
-                          return coord1.x < coord2.x;
-                      }
-                      if (coord1.y != coord2.y) {
-                          return coord1.y < coord2.y;
-                      }
-                      return id1 < id2;
-                  }
-              });
-
-    // If there are more than 3 bites, return the top 3 closest
-    size_t count = std::min(static_cast<size_t>(3), all_bites.size());
-    closest_bites.insert(closest_bites.end(), all_bites.begin(), all_bites.begin() + count);
+    std::vector<BiteID> closest_bites;
+    for (size_t i = 0; i < std::min<size_t>(3, distances.size()); ++i) {
+        closest_bites.push_back(distances[i].second);
+    }
 
     return closest_bites;
 }
+
 
 
