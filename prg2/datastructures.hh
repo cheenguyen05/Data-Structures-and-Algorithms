@@ -197,6 +197,8 @@ public:
 
   // Non-compulsory operations
 
+   // Non-compulsory operations
+
   // Estimate of performance:
   // Short rationale for estimate:
   std::vector<std::pair<Coord, Distance>> path_shortest(BiteID /*fromid*/,
@@ -211,9 +213,6 @@ public:
   // Short rationale for estimate:
   std::vector<std::pair<Coord, Distance>> path_least_uphill(BiteID /*fromid*/,
                                                             BiteID /*toid*/);
-
-
-
 private:
   struct Bite
   {

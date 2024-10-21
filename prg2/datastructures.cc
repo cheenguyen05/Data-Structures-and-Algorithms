@@ -496,98 +496,13 @@ std::vector<std::pair<Coord, Distance>> Datastructures::path_any(BiteID fromid, 
     return {};
 
 }
+
 // Non-compulsory operations
-std::vector<std::pair<Coord, Distance>> Datastructures::path_shortest(BiteID fromid,
-                                                                      BiteID toid)
+std::vector<std::pair<Coord, Distance>> Datastructures::path_shortest(BiteID /*fromid*/,
+                                                                      BiteID /*toid*/)
 {
-    // Edge case: if start and end are the same, return an empty path
-    if (fromid == toid) return {};
-
-    // Edge case: if either bite doesn't exist, return NO_COORD and NO_DISTANCE
-    if (bites_map_.find(fromid) == bites_map_.end() || bites_map_.find(toid) == bites_map_.end())
-    {
-        return { { NO_COORD, NO_DISTANCE } };
-    }
-
-    // Priority queue for Dijkstra: (distance_from_start, current_bite)
-    std::priority_queue<std::pair<Distance, BiteID>,
-                        std::vector<std::pair<Distance, BiteID>>,
-                        std::greater<>> pq;
-
-    // Map to store the shortest distance to each bite
-    std::unordered_map<BiteID, Distance> dist;
-    for (const auto& [bite_id, bite] : bites_map_)
-    {
-        dist[bite_id] = NO_DISTANCE;  // Initialize distances to "infinity"
-    }
-    dist[fromid] = 0;  // Distance to start node is 0
-
-    // Map to store the previous bite in the shortest path
-    std::unordered_map<BiteID, BiteID> prev;
-
-    // Push the starting bite into the priority queue
-    pq.push({0, fromid});
-
-    while (!pq.empty())
-    {
-        auto [current_dist, current_bite] = pq.top();
-        pq.pop();
-
-        // If we reached the target bite, reconstruct the path
-        if (current_bite == toid) break;
-
-        // Get all neighboring bites from the current bite
-        for (const auto& connection_id : bites_map_[current_bite].bite_connections)
-        {
-            const auto& connection = connections_map_[connection_id];
-            BiteID neighbor_bite = (connection.start_id == current_bite) ? connection.end_id : connection.start_id;
-
-            // Calculate the distance to the neighboring bite
-            Distance additional_dist = std::abs(bites_map_[current_bite].coord.x
-                                              - bites_map_[neighbor_bite].coord.x)
-                                     + std::abs(bites_map_[current_bite].coord.y
-                                              - bites_map_[neighbor_bite].coord.y);
-            Distance new_dist = current_dist + additional_dist;
-
-            // If a shorter path to neighbor_bite is found, update distance and previous bite
-            if (new_dist < dist[neighbor_bite])
-            {
-                dist[neighbor_bite] = new_dist;
-                prev[neighbor_bite] = current_bite;
-                pq.push({new_dist, neighbor_bite});
-            }
-        }
-    }
-
-    // If the target bite was not reached, return NO_COORD and NO_DISTANCE
-    if (dist[toid] == NO_DISTANCE) return { { NO_COORD, NO_DISTANCE } };
-
-    // Reconstruct the path from "toid" back to "fromid"
-    std::vector<std::pair<Coord, Distance>> path;
-    BiteID current_bite = toid;
-    Distance total_distance = 0;
-
-    while (current_bite != fromid)
-    {
-        BiteID previous_bite = prev[current_bite];
-        Coord current_coord = bites_map_[current_bite].coord;
-        Distance segment_distance = std::abs(bites_map_[previous_bite].coord.x
-                                             - current_coord.x)
-                                    + std::abs(bites_map_[previous_bite].coord.y
-                                             - current_coord.y);
-
-        path.push_back({current_coord, segment_distance});
-        total_distance += segment_distance;
-        current_bite = previous_bite;
-    }
-
-    // Don't forget to add the starting bite
-    path.push_back({bites_map_[fromid].coord, total_distance});
-
-    // The path is built backwards, so reverse it
-    std::reverse(path.begin(), path.end());
-
-    return path;
+  // Replace the line below with your implementation
+  throw NotImplemented("path_shortest");
 }
 std::vector<std::pair<Coord, Distance>> Datastructures::path_least_bites(BiteID /*fromid*/,
                                                                          BiteID /*toid*/)
@@ -595,35 +510,9 @@ std::vector<std::pair<Coord, Distance>> Datastructures::path_least_bites(BiteID 
   // Replace the line below with your implementation
   throw NotImplemented("path_least_bites");
 }
-std::vector<std::pair<Coord, Distance>> Datastructures::path_least_uphill(BiteID fromid,
-                                                                          BiteID toid)
+std::vector<std::pair<Coord, Distance>> Datastructures::path_least_uphill(BiteID /*fromid*/,
+                                                                          BiteID /*toid*/)
 {
-    if (fromid == toid) return {};
-
-    // Check if both bites exist
-    if (bites_map_.find(fromid) == bites_map_.end() || bites_map_.find(toid) == bites_map_.end())
-    {
-        return { { NO_COORD, NO_DISTANCE } };
-    }
-
-    std::unordered_map<BiteID, std::pair<Distance, Distance>> distance_uphill;
-    std::priority_queue<std::tuple<Distance,Distance,BiteID>> priority_queue;
-    distance_uphill[fromid] = {0,0};
-    priority_queue.push({0,0, fromid});
-
-    while(!priority_queue.empty())
-    {
-        auto[uphill, distance, current_id] = priority_queue.top();
-        priority_queue.pop();
-
-        for(const auto& [neighbor, coordinates] : graph[current_id])
-        {
-            Distance path_uphill,path_distance = 0;
-            Coord previous_coord = bites_map_[current_id].coord;
-            ContourHeight previous_height =
-        }
-
-
-    }
-
+  // Replace the line below with your implementation
+  throw NotImplemented("path_least_uphill");
 }
